@@ -25,8 +25,8 @@ import org.mvndaemon.mvnd.assertj.TestClientOutput;
 import org.mvndaemon.mvnd.client.Client;
 import org.mvndaemon.mvnd.junit.MvndNativeTest;
 
-@MvndNativeTest(projectDir = "src/test/projects/extension-with-api")
-public class ExtensionWithApiTest {
+@MvndNativeTest(projectDir = "src/test/projects/extension-altering-result")
+public class ExtensionAlteringResultTest {
 
     @Inject
     Client client;
@@ -34,11 +34,9 @@ public class ExtensionWithApiTest {
     @Test
     void pluginCanAccessExtensionApi() throws InterruptedException {
         install("extension");
-        install("plugin");
         TestClientOutput o = new TestClientOutput();
-        client.execute(o, "org.mvndaemon.mvnd.test.extension.with.api:plugin:mojo")
-                .assertSuccess();
-        o.assertContainsMatchingSubsequence("Hello World!");
+        client.execute(o, "initialize").assertFailure();
+        o.assertContainsMatchingSubsequence("Greetings from the extension");
     }
 
     private void install(String project) throws InterruptedException {

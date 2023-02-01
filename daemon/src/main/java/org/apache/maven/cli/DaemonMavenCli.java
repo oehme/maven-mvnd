@@ -235,7 +235,6 @@ public class DaemonMavenCli {
         } catch (ExitException e) {
             return e.exitCode;
         } finally {
-            eventSpyDispatcher.close();
             System.setProperties(props);
             Thread.currentThread().setContextClassLoader(tccl);
         }
@@ -696,6 +695,7 @@ public class DaemonMavenCli {
         LoggingOutputStream.forceFlush(System.err);
 
         eventSpyDispatcher.onEvent(result);
+        eventSpyDispatcher.close();
 
         if (result.hasExceptions()) {
             ExceptionHandler handler = new DefaultExceptionHandler();
